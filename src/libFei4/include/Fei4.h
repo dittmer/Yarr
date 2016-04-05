@@ -56,6 +56,7 @@ class Fei4 : public FrontEnd, public Fei4Cfg, public Fei4Cmd {
 
         void initMask(enum MASK_STAGE mask);
         void initMask(uint32_t mask);
+        void initMask(uint32_t &mask[21])
         void shiftMask();
         void loadIntoShiftReg(unsigned pixel_latch);
         void loadIntoPixel(unsigned pixel_latch);

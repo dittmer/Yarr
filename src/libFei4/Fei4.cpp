@@ -92,6 +92,10 @@ void Fei4::initMask(uint32_t mask) {
     wrFrontEnd(chipId, bitstream);
 }
 
+void Fei4::initMask(uint32_t &mask[21]) {
+    wrFrontEnd(chipId, mask);
+}
+
 void Fei4::shiftMask() {
     this->loadIntoShiftReg(0x1);
     this->loadIntoPixel(0x1);
