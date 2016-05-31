@@ -16,6 +16,9 @@
 #include "Fei4GlobalCfg.h"
 #include "Fei4PixelCfg.h"
 #include "tinyxml2.h"
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 #define ELECTRON_CHARGE 1.602e-19
 
@@ -43,6 +46,7 @@ class Fei4Cfg : public Fei4GlobalCfg, public Fei4PixelCfg {
             double C = 0;
             if (sCapOn) C += sCap*1e-15;
             if (lCapOn) C += lCap*1e-15;
+            if (C==0) return 0;
             double V = (charge*ELECTRON_CHARGE)/C;
             return (unsigned) round((V - vcalOffset*1e-3)/(vcalSlope*1e-3));
         }
@@ -63,6 +67,8 @@ class Fei4Cfg : public Fei4GlobalCfg, public Fei4PixelCfg {
         void fromFileBinary(std::string filename);
         void fromFileBinary();
         void toFileXml(tinyxml2::XMLDocument *doc);
+        void toFileJson(json &j);
+        void fromFileJson(json &j);
 
     protected:
         std::string name;
