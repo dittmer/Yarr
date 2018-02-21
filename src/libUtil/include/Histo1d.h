@@ -28,6 +28,8 @@ class Histo1d : public HistogramBase {
         unsigned getEntries() const;
         double getMean();
         double getStdDev();
+	double getUnderflow() const;
+	double getOverflow() const;
 
         void fill(double x, double v=1);
 

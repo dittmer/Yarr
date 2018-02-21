@@ -51,6 +51,7 @@ class Fe65p2Cmd {
         void writeGlobal(uint16_t *cfg);
         void writePixel(uint16_t *bitstream);
         void writePixel(uint16_t mask);
+        void writePixel(uint16_t mask1, uint16_t mask2);
         
         void setLatency(uint16_t lat);
         void injectAndTrigger();

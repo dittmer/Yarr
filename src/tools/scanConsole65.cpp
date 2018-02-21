@@ -272,6 +272,9 @@ int main(int argc, char *argv[]) {
     } else if (scanType == "totscan") {
         std::cout << "-> Found ToT Scan" << std::endl;
         s = new Fe65p2TotScan(&bookie);
+    } else if (scanType == "xtalkscan") {
+        std::cout << "-> Found Cross-talk Scan" << std::endl;
+        s = new Fe65p2XtalkScan(&bookie);
     } else if (scanType == "tune_globalthreshold") {
         std::cout << "-> Found Global Threshold Tuning" << std::endl;
         s = new Fe65p2GlobalThresholdTune(&bookie);
@@ -331,7 +334,9 @@ int main(int argc, char *argv[]) {
                 //fe->ana->addAlgorithm(new OccupancyAnalysis());
                 fe->ana->addAlgorithm(new ScurveFitter());
             } else if (scanType == "totscan") {
-	            fe->ana->addAlgorithm(new TotAnalysis());
+	      fe->ana->addAlgorithm(new TotAnalysis());
+            } else if (scanType == "xtalkscan") {
+	      fe->ana->addAlgorithm(new TotAnalysis()); 
             } else if (scanType == "tune_globalthreshold") {
                 fe->ana->addAlgorithm(new OccGlobalThresholdTune());
             } else if (scanType == "tune_pixelthreshold") {
@@ -461,6 +466,7 @@ void listScans() {
     std::cout << "  analogscan" << std::endl;
     std::cout << "  thresholdscan" << std::endl;
     std::cout << "  totscan" << std::endl;
+    std::cout << "  xtalkscan" << std::endl;
     std::cout << "  tune_globalthreshold" << std::endl;
     std::cout << "  tune_pixelthreshold" << std::endl;
     std::cout << "  tune_globalpreamp" << std::endl;

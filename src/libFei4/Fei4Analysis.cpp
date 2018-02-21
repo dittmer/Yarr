@@ -84,6 +84,7 @@ void OccupancyAnalysis::init(ScanBase *s) {
         std::shared_ptr<LoopActionBase> l = s->getLoop(n);
         if ((l->type() != typeid(Fei4TriggerLoop*) &&
                     l->type() != typeid(Fe65p2MaskLoop*) &&
+	            l->type() != typeid(Fe65p2XtalkMaskLoop*) &&
                     l->type() != typeid(Fe65p2TriggerLoop*) &&
                     l->type() != typeid(Fe65p2QcLoop*) &&
                     l->type() != typeid(Fei4MaskLoop*) &&
@@ -223,12 +224,14 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
     std::string name = "OccMap";
     std::string name2 = "TotMap";
     std::string name3 = "Tot2Map";
+    std::string name4 = "HitsPerEvent";
     for (unsigned n=0; n<loops.size(); n++) {
         ident += h->getStat().get(loops[n])+offset;
         offset += loopMax[n];
         name += "-" + std::to_string(h->getStat().get(loops[n]));
         name2 += "-" + std::to_string(h->getStat().get(loops[n]));
         name3 += "-" + std::to_string(h->getStat().get(loops[n]));
+        name4 += "-" + std::to_string(h->getStat().get(loops[n]));
     }
 
     // Check if Histogram exists
@@ -251,6 +254,11 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
         hh->setZaxisTitle("{/Symbol S}(ToT^2)");
         tot2Maps[ident] = hh;
         tot2InnerCnt[ident] = 0;
+        Histo1d *hh1 = new Histo1d(name4, 16, -0.5, 15.5, typeid(this));
+        hh1->setXaxisTitle("Number of Hits");
+        hh1->setYaxisTitle("Events");
+        nHitDists[ident] = hh1;
+        nHitInnerCnt[ident] = 0;
     }
 
     // Gather Histogram
@@ -263,6 +271,9 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
     } else if (h->getType() == typeid(Tot2Map*)) {
         tot2Maps[ident]->add(*(Histo2d*)h);
         tot2InnerCnt[ident]++;
+    } else if (h->getType() == typeid(HitsPerEvent*)) {
+      nHitDists[ident]->add(*(Histo1d*)h);
+      nHitInnerCnt[ident]++;
     } else {
         return;
     }
@@ -270,7 +281,7 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
     // Got all data, finish up Analysis
     if (occInnerCnt[ident] == n_count &&
             totInnerCnt[ident] == n_count &&
-            tot2InnerCnt[ident] == n_count) {
+            tot2InnerCnt[ident] == n_count && nHitInnerCnt[ident] == n_count) {
         Histo2d *meanTotMap = new Histo2d("MeanTotMap", nCol, 0.5, nCol+0.5, nRow, 0.5, nRow+0.5, typeid(this));
         meanTotMap->setXaxisTitle("Column");
         meanTotMap->setYaxisTitle("Row");
@@ -352,6 +363,7 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
         output->pushData(sigmaTotMap);
         output->pushData(meanTotDist);
         output->pushData(sigmaTotDist);
+	output->pushData(nHitDists[ident]);
         delete sumTot2Map;
         delete sumTotMap;
 
@@ -807,6 +819,7 @@ void L1Analysis::init(ScanBase *s) {
                     l->type() != typeid(StdDataLoop*) &&
                     l->type() != typeid(Fei4DcLoop*)) &&
                 l->type() != typeid(Fe65p2MaskLoop*) &&
+	    l->type() != typeid(Fe65p2XtalkMaskLoop*) &&
                 l->type() != typeid(Fe65p2QcLoop*) &&
                 l->type() != typeid(Fe65p2TriggerLoop*) &&
                 l->type() != tmpVcalLoop->type() &&
@@ -878,6 +891,7 @@ void TotDistPlotter::init(ScanBase *s) {
                     l->type() != typeid(StdDataLoop*) &&
                     l->type() != typeid(Fei4DcLoop*)) &&
                 l->type() != typeid(Fe65p2MaskLoop*) &&
+	    l->type() != typeid(Fe65p2XtalkMaskLoop*) &&
                 l->type() != typeid(Fe65p2QcLoop*) &&
                 l->type() != typeid(Fe65p2TriggerLoop*) &&
                 l->type() != tmpVcalLoop->type() &&
