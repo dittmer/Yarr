@@ -86,10 +86,13 @@ void OccupancyMap::processEvent(Fei4Data *data) {
 void TotMap::processEvent(Fei4Data *data) {
     for (std::list<Fei4Event>::iterator eventIt = (data->events).begin(); eventIt!=data->events.end(); ++eventIt) {   
         Fei4Event curEvent = *eventIt;
+	std::cout << "Reading event with " << curEvent.nHits << " hits, L1ID " << curEvent.l1id << " BXID " << curEvent.bcid << std::endl;
         for (std::vector<Fei4Hit>::iterator hitIt = curEvent.hits.begin(); hitIt!=curEvent.hits.end(); ++hitIt) {   
             Fei4Hit curHit = *hitIt;
-            if(curHit.tot > 0)
+            if(curHit.tot > 0){
                 h->fill(curHit.col, curHit.row, curHit.tot);
+		if (curHit.col % 4 == 2 && curHit.row % 4 == 2) std::cout << "Hit in col " << curHit.col << " row " << curHit.row << " with value " << curHit.tot << std::endl;
+	    }
         }
     }
 }

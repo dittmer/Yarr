@@ -364,15 +364,17 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
         output->pushData(meanTotDist);
         output->pushData(sigmaTotDist);
 	output->pushData(nHitDists[ident]);
+	output->pushData(occMaps[ident]);
         delete sumTot2Map;
         delete sumTotMap;
 
-        delete occMaps[ident];
+        //delete occMaps[ident];
         delete totMaps[ident];
         delete tot2Maps[ident];
         occInnerCnt[ident] = 0;
         totInnerCnt[ident] = 0;
         tot2InnerCnt[ident] = 0;
+	nHitInnerCnt[ident] = 0;
     }
 }
 
