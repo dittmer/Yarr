@@ -7,7 +7,7 @@
 
 Fe65p2XtalkMaskLoop::Fe65p2XtalkMaskLoop() : LoopActionBase() {
     min = 0;
-    max = 256; //64 col masks x 4 (modular) row masks
+    max = 32; //64 col masks x 4 (modular) row masks
     step = 1;
     m_cur = 0;
     m_done = false;
@@ -109,6 +109,19 @@ void Fe65p2XtalkMaskLoop::execPart1() {
 
 void Fe65p2XtalkMaskLoop::execPart2() {
    m_cur += step;
+
+   g_fe65p2->setValue(&Fe65p2::ColSrEn, 0xFFFF);
+   g_fe65p2->setValue(&Fe65p2::OneSr, 0);
+   g_fe65p2->configureGlobal();
+   usleep(2000);
+   g_fe65p2->writePixel((uint16_t)0x0);
+   g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x1);
+   g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x3);
+   g_fe65p2->configureGlobal();
+   g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x0);
+   g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x0);
+   g_fe65p2->configureGlobal();
+
    if (!(m_cur<max)) m_done = true;
 }
 

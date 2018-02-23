@@ -181,7 +181,8 @@ void TotAnalysis::init(ScanBase *s) {
         std::shared_ptr<LoopActionBase> l = s->getLoop(n);
         if ((l->type() != typeid(Fei4TriggerLoop*) &&
                     l->type() != typeid(Fe65p2MaskLoop*) &&
-                    l->type() != typeid(Fe65p2TriggerLoop*) &&
+	     l->type() != typeid(Fe65p2XtalkMaskLoop*) &&
+                     l->type() != typeid(Fe65p2TriggerLoop*) &&
                     l->type() != typeid(Fe65p2QcLoop*) &&
                     l->type() != typeid(Fei4MaskLoop*) &&
                     l->type() != typeid(StdDataLoop*) &&
