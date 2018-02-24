@@ -7,7 +7,7 @@
 
 Fe65p2XtalkMaskLoop::Fe65p2XtalkMaskLoop() : LoopActionBase() {
     min = 0;
-    max = 32; //64 col masks x 4 (modular) row masks
+    max = 256; //64 col masks x 4 (modular) row masks
     step = 1;
     m_cur = 0;
     m_done = false;
@@ -34,8 +34,7 @@ void Fe65p2XtalkMaskLoop::execPart1() {
   unsigned i_QC       = global_col / 4;            // QC containing column
   unsigned local_col  = global_col % 4;            // Column # in QC
   unsigned local_row  = m_cur % 4;                 // Row # modulo 4 (inject every 4)
-
-  int shift = getShift(global_col);
+  int shift = getShift(global_col);                // Does mask spill into secondary QC?
 
   // Get ready to program QCs
   uint16_t tmp1 = g_fe65p2->getValue(&Fe65p2::Vthin1Dac);
@@ -78,8 +77,16 @@ void Fe65p2XtalkMaskLoop::execPart1() {
     g_fe65p2->setValue(&Fe65p2::OneSr, 0);
     g_fe65p2->configureGlobal();
     
+    // First make sure that secondary QC is not being injected
+    g_fe65p2->writePixel((unit16_t)0x0);
+    g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x3);
+    g_fe65p2->configureGlobal();
+    g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x0);
+    g_fe65p2->configureGlobal();
+    g_fe65p2->writePixel((uint16_t)0x0); 
+    
+    // Now enable relevant pixels
     m_PixConf = getMaskEn(local_col,local_row,shift);
-
     g_fe65p2->writePixel(m_PixConf.first, m_PixConf.second);
     g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x3);
     g_fe65p2->configureGlobal();
@@ -95,8 +102,8 @@ void Fe65p2XtalkMaskLoop::execPart1() {
   g_fe65p2->configureGlobal();
   usleep(5000); // Wait for DAC
 
-  // TODO: should this only be set for cols we are injecting later?
-  g_fe65p2->setValue(&Fe65p2::ColSrEn, 0xFFFF);
+  // TODO: is this needed? Shouldn't have to do with enabling / disabling readout
+  //g_fe65p2->setValue(&Fe65p2::ColSrEn, 0xFFFF);
   
   while(g_tx->isCmdEmpty() == 0);
   g_stat->set(this, m_cur); //TODO: this might need to be changed
@@ -109,19 +116,6 @@ void Fe65p2XtalkMaskLoop::execPart1() {
 
 void Fe65p2XtalkMaskLoop::execPart2() {
    m_cur += step;
-
-   g_fe65p2->setValue(&Fe65p2::ColSrEn, 0xFFFF);
-   g_fe65p2->setValue(&Fe65p2::OneSr, 0);
-   g_fe65p2->configureGlobal();
-   usleep(2000);
-   g_fe65p2->writePixel((uint16_t)0x0);
-   g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x1);
-   g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x3);
-   g_fe65p2->configureGlobal();
-   g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x0);
-   g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x0);
-   g_fe65p2->configureGlobal();
-
    if (!(m_cur<max)) m_done = true;
 }
 
