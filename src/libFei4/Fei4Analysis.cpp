@@ -255,7 +255,7 @@ void TotAnalysis::processHistogram(HistogramBase *h) {
         hh->setZaxisTitle("{/Symbol S}(ToT^2)");
         tot2Maps[ident] = hh;
         tot2InnerCnt[ident] = 0;
-        Histo1d *hh1 = new Histo1d(name4, 16, -0.5, 15.5, typeid(this));
+        Histo1d *hh1 = new Histo1d(name4, 145, -0.5, 144.5, typeid(this));
         hh1->setXaxisTitle("Number of Hits");
         hh1->setYaxisTitle("Events");
         nHitDists[ident] = hh1;

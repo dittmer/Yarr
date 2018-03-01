@@ -78,7 +78,7 @@ void Fe65p2XtalkMaskLoop::execPart1() {
     g_fe65p2->configureGlobal();
     
     // First make sure that secondary QC is not being injected
-    g_fe65p2->writePixel((unit16_t)0x0);
+    g_fe65p2->writePixel((uint16_t)0x0);
     g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x3);
     g_fe65p2->configureGlobal();
     g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x0);
