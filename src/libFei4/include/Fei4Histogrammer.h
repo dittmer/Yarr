@@ -223,7 +223,7 @@ class HitsPerEvent : public HistogramAlgorithm {
         }
 
         void create(LoopStatus &stat) {
-            h = new Histo1d("HitDist", 145, -0.5, 144.5, typeid(this), stat);
+            h = new Histo1d("HitDist", 80, -0.5, 79.5, typeid(this), stat);
             h->setXaxisTitle("Number of Hits");
             h->setYaxisTitle("Events");
             r = (HistogramBase*) h;
