@@ -221,7 +221,7 @@ void Histo2d::plot(std::string prefix, std::string dir) {
     FILE *gnu = popen(cmd.c_str(), "w");
     
     //fprintf(gnu, "set terminal postscript enhanced color \"Helvetica\" 18 eps\n");
-    fprintf(gnu, "set terminal png size 1280, 1024\n");
+    fprintf(gnu, "set terminal png size 1280, 1024 font \",20\"\n");
     fprintf(gnu, "set palette negative defined ( 0 '#D53E4F', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#E6F598', 5 '#ABDDA4', 6 '#66C2A5', 7 '#3288BD')\n");
     //fprintf(gnu, "set pm3d map\n");
     fprintf(gnu, "unset key\n");
