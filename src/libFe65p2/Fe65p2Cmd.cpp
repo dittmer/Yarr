@@ -65,6 +65,22 @@ void Fe65p2Cmd::writePixel(uint16_t mask1, uint16_t mask2) {
     usleep(50); // Need to wait for Mojo to send
 }
 
+void Fe65p2Cmd::writePixel(uint16_t mask11, uint16_t mask12, uint16_t mask21, uint16_t mask22) {
+    for (unsigned i=0; i<Fe65p2PixelCfg::n_Words; i++) {
+      uint16_t mask = (i < Fe65p2PixelCfg::n_Words / 2) ? (i%2==0 ? mask11 : mask12) : (i%2 == 0 ? mask21 : mask22);
+      uint32_t cmd = MOJO_HEADER;
+      cmd |= ((PIXEL_REG_BASE + i) << 16);
+      cmd |= (0xffff & mask);
+      core->writeFifo(0x0);
+      core->writeFifo(cmd);
+    }
+    core->writeFifo(0x0);
+    core->writeFifo(MOJO_HEADER + (PULSE_REG << 16) + PULSE_SHIFT_PIXEL);
+    while(core->isCmdEmpty() == 0);
+    usleep(50); // Need to wait for Mojo to send
+}
+
+
 void Fe65p2Cmd::setLatency(uint16_t lat) {
     core->writeFifo(0x0);
     core->writeFifo(MOJO_HEADER + (LAT_REG << 16) + lat);

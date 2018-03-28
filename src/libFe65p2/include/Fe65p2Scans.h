@@ -2,6 +2,7 @@
 #include "Fe65p2ThresholdScan.h"
 #include "Fe65p2AnalogScan.h"
 #include "Fe65p2XtalkScan.h"
+#include "Fe65p2Xtalk3x3Scan.h"
 #include "Fe65p2GlobalThresholdTune.h"
 #include "Fe65p2PixelThresholdTune.h"
 #include "Fe65p2NoiseScan.h"

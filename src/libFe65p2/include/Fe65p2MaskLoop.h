@@ -13,10 +13,10 @@
 class Fe65p2MaskLoop : public LoopActionBase {
     public:
         Fe65p2MaskLoop();
-        void setMaskStage(uint32_t mask);
+        void setMaskStage(uint16_t mask);
 
     private:
-        uint32_t m_mask;
+        uint16_t m_mask;
         unsigned m_cur;
 
         void init();

@@ -1,6 +1,7 @@
 #include "Fe65p2QcLoop.h"
 #include "Fe65p2MaskLoop.h"
 #include "Fe65p2XtalkMaskLoop.h"
+#include "Fe65p2Xtalk3x3MaskLoop.h"
 #include "Fe65p2TriggerLoop.h"
 #include "Fe65p2ParameterLoop.h"
 #include "Fe65p2GlobalFeedback.h"
