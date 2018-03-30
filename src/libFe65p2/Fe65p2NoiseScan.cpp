@@ -12,6 +12,7 @@ Fe65p2NoiseScan::Fe65p2NoiseScan(Bookkeeper *k) : ScanBase(k) {
     triggerFrequency = 1e3;
     triggerTime = 360;
     verbose = false;
+    start_fresh = true;
 }
 
 // Initialize Loops
@@ -40,9 +41,22 @@ void Fe65p2NoiseScan::init() {
 
 // Do necessary pre-scan configuration
 void Fe65p2NoiseScan::preScan() {
-    g_fe65p2->setValue(&Fe65p2::TrigCount, 10);
-    g_fe65p2->setValue(&Fe65p2::Latency, 70);
+  g_fe65p2->configurePixels();
+  g_fe65p2->setValue(&Fe65p2::TrigCount, 10);
+  g_fe65p2->setValue(&Fe65p2::Latency, 70);
+  g_fe65p2->configureGlobal();
+  if (start_fresh) {
+    g_fe65p2->setValue(&Fe65p2::ColEn, 0xFFFF);
+    g_fe65p2->setValue(&Fe65p2::ColSrEn, 0xFFFF);
     g_fe65p2->configureGlobal();
-    while(!g_tx->isCmdEmpty());
+    usleep(2000);
+    g_fe65p2->writePixel((uint16_t)0xffff);
+    g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x3);
+    g_fe65p2->configureGlobal();
+    g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x0);
+    g_fe65p2->configureGlobal();
+    g_fe65p2->writePixel((uint16_t)0x0);
+  }
+  while(!g_tx->isCmdEmpty());
 }
 
