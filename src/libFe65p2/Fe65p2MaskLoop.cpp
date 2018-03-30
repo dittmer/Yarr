@@ -41,32 +41,38 @@ void Fe65p2MaskLoop::execPart1() {
     g_fe65p2->setValue(&Fe65p2::VffDac, 0);
     // Incorporating base mask from json
     if (use_mask) {
-      //Turn all QC on
+      // Power all QCs
       g_fe65p2->setValue(&Fe65p2::ColEn, 0xFFFF);
       g_fe65p2->configureGlobal();
-      usleep(2000);
-      //Program one QC at a time
       for(unsigned i=0; i<Fe65p2Cfg::n_QC; i++) {
-        setValue(&Fe65p2::ColSrEn, (0x1<<i));
-        setValue(&Fe65p2::OneSr, 0);
-        configureGlobal();
-	//Get base InjEn mask (assumes same PixConf and InjEn masks)
-	uint16_t* baseMask = g_fe65p2->getCfg(1,i);
-	//Modify baseMask with mask stage
+	// Enable one QC at a time
+	g_fe65p2->setValue(&Fe65p2::ColSrEn, (0x1)<<i);
+	//g_fe65p2->setValue(&Fe65p2::OneSr, 0);
+	g_fe65p2->configureGlobal();
+	usleep(2000); // Wait for DAC
+	// Get mask from JSON
+	uint16_t* baseMask = g_fe65p2->getCfg(6,i);
+	uint16_t newMask[Fe65p2PixelCfg::n_Words] = {};
+	//Add mask stage on top of base mask
 	for (unsigned j=0; j<Fe65p2PixelCfg::n_Words; j++){
-	  baseMask[j] &= (m_mask<<m_cur);
+	  newMask[j] = baseMask[j] & (m_mask<<m_cur);
 	}
-	writePixel(baseMask);
-	setValue(&Fe65p2::SignLd, 0x1);
-	setValue(&Fe65p2::PixConfLd, 0x3);
-	configureGlobal();
-
-	// Unset Shadow registers
-	setValue(&Fe65p2::InjEnLd, 0x0);
-	setValue(&Fe65p2::PixConfLd, 0x0);
-	configureGlobal();
-	writePixel((uint16_t) 0x0);
+	// Write mask to SR
+	g_fe65p2->writePixel(newMask);
+	// Write to Pixel reg
+	g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x1);
+	g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x3);
+	g_fe65p2->configureGlobal();
+	// Clear registers when done
+	g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x0);
+	g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x0);
+	g_fe65p2->configureGlobal();
+	usleep(2000);
       }
+      // Apparently ColSrEn also needs to be on to read out QC? Set on for all
+      g_fe65p2->setValue(&Fe65p2::ColSrEn, 0xFFFF);
+      g_fe65p2->configureGlobal();
+      usleep(2000);
     }
     else {
       // All in parallel
@@ -91,7 +97,7 @@ void Fe65p2MaskLoop::execPart1() {
     g_fe65p2->setValue(&Fe65p2::VffDac, tmp3);
     g_fe65p2->configureGlobal();
     usleep(5000); // Wait for DAC 
-
+    
     // Leave SR set, as it enables the digital inj (if TestHit is set)
     while(g_tx->isCmdEmpty() == 0);
     g_stat->set(this, m_cur);
