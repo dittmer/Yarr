@@ -18,6 +18,7 @@ class Fe65p2MaskLoop : public LoopActionBase {
     private:
         uint16_t m_mask;
         unsigned m_cur;
+	bool use_mask;
 
         void init();
         void end();
