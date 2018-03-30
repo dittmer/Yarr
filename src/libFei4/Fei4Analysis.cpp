@@ -994,6 +994,11 @@ void NoiseAnalysis::end() {
                     fe->setEn((i/nRow)+1, (i%nRow)+1, 0);
                     fe->setHitbus((i/nRow)+1, (i%nRow)+1, 1);
                 }
+		if(dynamic_cast<Fe65p2*>(bookie->getFe(channel))){
+		  Fe65p2 *fe = dynamic_cast<Fe65p2*>(bookie->getFe(channel));
+		  fe->setPixConf((i/nRow)+1, (i%nRow)+1, 0);
+		  fe->setInjEn((i/nRow)+1, (i%nRow)+1, 0);
+		}
             }
         } else {
             mask->setBin(i, 1);
