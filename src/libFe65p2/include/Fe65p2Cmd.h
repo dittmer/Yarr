@@ -52,7 +52,8 @@ class Fe65p2Cmd {
         void writePixel(uint16_t *bitstream);
         void writePixel(uint16_t mask);
         void writePixel(uint16_t mask1, uint16_t mask2);
-        
+	void writePixel(uint16_t mask11, uint16_t mask12, uint16_t mask21, uint16_t mask22);
+
         void setLatency(uint16_t lat);
         void injectAndTrigger();
         void setPlsrDac(unsigned setting);

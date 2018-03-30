@@ -48,10 +48,9 @@ void Fe65p2XtalkMaskLoop::execPart1() {
     // Write mask to SR
     g_fe65p2->writePixel(m_mask<<(2*m_cur),m_mask<<(2*(m_cur^2))); //2x1
     /*
-      if (m_cur < 4) g_fe65p2->writePixel(m_mask<<(4*m_cur),0x0,0x0,m_mask<<(4*m_cur)); //2x2
-      else g_fe65p2->writePixel(0x0,m_mask<<(4*(m_cur-4)),m_mask<<(4*(m_cur-4)),0x0);
-     */
-            
+    if (m_cur < 4) g_fe65p2->writePixel(m_mask<<(4*m_cur),0x0,m_mask<<(4*(3-m_cur)),0x0); //2x2
+    else g_fe65p2->writePixel(0x0,m_mask<<(4*(m_cur-4)),0x0,m_mask<<(4*(7-m_cur)));
+    */      
     // Write to Pixel reg
     g_fe65p2->setValue(&Fe65p2::InjEnLd, 0x1);
     g_fe65p2->setValue(&Fe65p2::PixConfLd, 0x3);
