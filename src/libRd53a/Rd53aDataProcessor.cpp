@@ -6,7 +6,7 @@
 // # Date: Apr 2018
 // ################################
 
-#include "libRd53a/include/Rd53aDataProcessor.h"
+#include "Rd53aDataProcessor.h"
 #include "AllProcessors.h"
 
 bool rd53a_proc_registered =

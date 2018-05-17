@@ -16,8 +16,8 @@
 #include "DataProcessor.h"
 #include "ClipBoard.h"
 #include "RawData.h"
-#include "libFei4/include/Fei4EventData.h"
-#include "libRd53a/include/Rd53a.h"
+#include "Fei4EventData.h"
+#include "Rd53a.h"
 
 class Rd53aDataProcessor : public DataProcessor {
     public:

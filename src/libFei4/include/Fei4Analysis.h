@@ -28,8 +28,8 @@
 #include "FeedbackBase.h"
 
 #include "AllFei4Actions.h"
-//#include "AllFe65p2Actions.h"
-#include "libRd53a/include/AllRd53aActions.h"
+#include "AllFe65p2Actions.h"
+#include "AllRd53aActions.h"
 #include "AllStdActions.h"
 
 class AnalysisAlgorithm {
