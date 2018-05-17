@@ -18,6 +18,8 @@
 class Rd53aCoreColLoop : public LoopActionBase {
     public:
         Rd53aCoreColLoop();
+
+	virtual ~Rd53aCoreColLoop() {}
         
         void writeConfig(json &j);
         void loadConfig(json &j);

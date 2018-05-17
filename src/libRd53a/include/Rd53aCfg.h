@@ -30,6 +30,8 @@ class Rd53aCfg : public FrontEndCfg, public Rd53aGlobalCfg, public Rd53aPixelCfg
             m_injCap = 8.2;
         }
 
+	virtual ~Rd53aCfg() {}
+
         double toCharge(double vcal) {
             // Q = C*V
             // Linear is good enough

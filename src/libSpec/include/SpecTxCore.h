@@ -52,6 +52,8 @@ class SpecTxCore : virtual public TxCore, virtual public SpecCom{
     public:
         SpecTxCore();
 
+	virtual ~SpecTxCore() {}
+
         void setVerbose(bool v=true);
 
         void writeFifo(uint32_t value);

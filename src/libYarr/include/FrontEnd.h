@@ -59,7 +59,8 @@ class FrontEndCfg {
             txChannel = 99;
             rxChannel = 99;
         }
-        
+	virtual ~FrontEndCfg() {}
+
 
         virtual double toCharge(double)=0;
         virtual double toCharge(double, bool, bool)=0;

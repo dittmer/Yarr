@@ -23,6 +23,8 @@ class Rd53aPixelFeedback : public LoopActionBase, public PixelFeedbackBase {
     public:
         Rd53aPixelFeedback();
 
+	virtual ~Rd53aPixelFeedback() {}
+
         void writeConfig(json &j);
         void loadConfig(json &j);
 

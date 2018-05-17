@@ -1,5 +1,5 @@
 #include "AllStdActions.h"
-#include "AllRd53aActions.h"
+#include "libRd53a/include/AllRd53aActions.h"
 
 namespace AllRd53aActionsRegistry {
     using StdDict::registerLoopAction;

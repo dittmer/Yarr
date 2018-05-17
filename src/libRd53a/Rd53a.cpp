@@ -8,7 +8,7 @@
 // ################################
 
 #include "AllChips.h"
-#include "Rd53a.h"
+#include "libRd53a/include/Rd53a.h"
 
 bool rd53a_registred =
     StdDict::registerFrontEnd("RD53A", [](){return std::unique_ptr<FrontEnd>(new Rd53a());});

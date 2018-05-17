@@ -23,6 +23,7 @@ class Rd53aReg {
         Rd53aReg() {
             m_addr = 999;
         }
+	virtual ~Rd53aReg() {}
 
         void init(unsigned addr, uint16_t *cfg, const unsigned bOffset, const unsigned bits, const uint16_t value) {
             m_addr = addr;
@@ -60,6 +61,8 @@ class Rd53aReg {
 
 class Rd53aDiffReg : public Rd53aReg {
     public:
+  virtual ~Rd53aDiffReg() {}
+
         void init(Rd53aReg *arg_lowRef, Rd53aReg *arg_highRef, bool changeHigh) {
             lowRef = arg_lowRef;
             highRef = arg_highRef;

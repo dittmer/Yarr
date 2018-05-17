@@ -18,6 +18,7 @@
 class Rd53aTriggerLoop: public LoopActionBase {
     public:
         Rd53aTriggerLoop();
+	virtual ~Rd53aTriggerLoop() {}
  
         uint32_t getTrigCnt() {return m_trigCnt;}
         void setTrigCnt(uint32_t cnt) {m_trigCnt = cnt;}

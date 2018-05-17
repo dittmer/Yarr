@@ -20,6 +20,8 @@ class Rd53aMaskLoop : public LoopActionBase {
     public:
         Rd53aMaskLoop();
 
+	virtual ~Rd53aMaskLoop() {}
+
         void writeConfig(json &j);
         void loadConfig(json &j);
     private:

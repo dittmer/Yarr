@@ -25,6 +25,8 @@ using std::shared_ptr;
 class LoopActionBase {
     public:
         LoopActionBase();
+	virtual ~LoopActionBase() {}
+
 
         void setVerbose(bool v=true);
         void setup(LoopStatus *stat, Bookkeeper *k);
