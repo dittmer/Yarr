@@ -21,6 +21,7 @@ StdDataLoop::StdDataLoop() : LoopActionBase() {
 void StdDataLoop::init() {
     m_done = false;
     killswitch = false;
+    rdc_global = new RawDataContainer();
     if (verbose)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
@@ -102,13 +103,13 @@ void StdDataLoop::execPart2() {
 void StdDataLoop::execPart2Standalone() {
 	
     RawData *newData = NULL;
-    RawDataContainer *rdc = new RawDataContainer();
-    uint32_t done = g_tx->isTrigDone();
+    
+    uint32_t done = 0 /*g_tx->isTrigDone()*/;
     if (done == 0) {
         do {
             newData =  g_rx->readData();
             if (newData != NULL) {
-                rdc->add(newData);
+                rdc_global->add(newData);
             }
         } while (newData != NULL);
         //delete newData;
@@ -116,17 +117,20 @@ void StdDataLoop::execPart2Standalone() {
     else
 	m_done = true;
     // Gather rest of data after timeout (~0.1ms)
-    std::this_thread::sleep_for(std::chrono::microseconds(500));
+    //std::this_thread::sleep_for(std::chrono::microseconds(500));
     delete newData;
-    
-    rdc->stat = *g_stat;
-    storage->pushData(rdc);
-        
-    counter++;
+            
 }
 
 void StdDataLoop::sendAbort() {
 	g_tx->toggleTrigAbort();
+	std::this_thread::sleep_for(std::chrono::microseconds(500));
+}
+
+void StdDataLoop::pushData() {
+    rdc_global->stat = *g_stat;
+    storage->pushData(rdc_global);
+    counter++;
 }
 
 void StdDataLoop::connect(ClipBoard<RawDataContainer> *clipboard) {

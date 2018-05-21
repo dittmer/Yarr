@@ -21,6 +21,7 @@ class StdDataLoop: public LoopActionBase {
         void execPart2();
 	void execPart2Standalone();
 	void sendAbort();
+	void pushData();
 	void kill() {
 		killswitch = true;
 	}
@@ -29,6 +30,7 @@ class StdDataLoop: public LoopActionBase {
         ClipBoard<RawDataContainer> *storage;
         unsigned counter;
 	bool killswitch;
+	RawDataContainer* rdc_global;
 };
 
 #endif
