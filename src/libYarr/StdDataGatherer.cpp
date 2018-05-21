@@ -84,6 +84,30 @@ void StdDataGatherer::execPart2() {
     counter++;
 }
 
+void StdDataGatherer::execPart2Standalone() {
+
+    RawData *newData = NULL;
+    RawDataContainer *rdc = new RawDataContainer();
+    uint32_t done = g_tx->isTrigDone();
+    if (done == 0){
+      do {
+	newData =  g_rx->readData();
+	if (newData != NULL) {
+	  rdc->add(newData);
+	}
+      } while (newData != NULL);
+      delete newData;
+      rdc->stat = *g_stat;
+      storage->pushData(rdc);
+      std::this_thread::sleep_for(std::chrono::microseconds(500));
+      counter++;
+    }
+}
+
+void StdDataGatherer::sendAbort(){
+  g_tx->toggleTrigAbort();
+}
+
 void StdDataGatherer::connect(ClipBoard<RawDataContainer> *clipboard) {
     storage = clipboard;
 }

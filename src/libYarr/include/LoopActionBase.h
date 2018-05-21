@@ -49,12 +49,15 @@ class LoopActionBase {
 		
         bool checkGlobalDone();
 
-    protected:
         virtual void init() {}
         virtual void end() {}
         virtual void execPart1() {}
         virtual void execPart2() {}
+	virtual void execPart2Standalone() {}
+	virtual void sendAbort() {}
         virtual bool done();
+
+    protected:
 
         bool m_done;
 		bool g_done;

@@ -30,6 +30,10 @@ class Rd53aTriggerLoop: public LoopActionBase {
         
         void writeConfig(json &config);
         void loadConfig(json &config);
+        void init();
+        void execPart1();
+        void execPart2();
+        void end();
 
     private:
         uint32_t m_trigCnt;
@@ -44,10 +48,6 @@ class Rd53aTriggerLoop: public LoopActionBase {
         uint32_t m_pulseDuration;
 
         bool isInner;
-        void init();
-        void execPart1();
-        void execPart2();
-        void end();
 };
 
 #endif

@@ -15,14 +15,20 @@ class StdDataLoop: public LoopActionBase {
     public:
         StdDataLoop();
         void connect(ClipBoard<RawDataContainer> *clipboard);
-        
-    private:
-        ClipBoard<RawDataContainer> *storage;
-        unsigned counter;
         void init();
         void end();
         void execPart1();
         void execPart2();
+	void execPart2Standalone();
+	void sendAbort();
+	void kill() {
+		killswitch = true;
+	}
+        
+    private:
+        ClipBoard<RawDataContainer> *storage;
+        unsigned counter;
+	bool killswitch;
 };
 
 #endif

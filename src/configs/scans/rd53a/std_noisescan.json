@@ -48,7 +48,7 @@
         "loopAction": "Rd53aTriggerLoop"
       },
       {
-        "loopAction": "StdDataGatherer"
+        "loopAction": "StdDataLoop"
       }
     ],
     "name": "NoiseScan",

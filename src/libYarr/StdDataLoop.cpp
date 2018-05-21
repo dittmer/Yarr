@@ -20,6 +20,7 @@ StdDataLoop::StdDataLoop() : LoopActionBase() {
 
 void StdDataLoop::init() {
     m_done = false;
+    killswitch = false;
     if (verbose)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
@@ -38,6 +39,8 @@ void StdDataLoop::execPart1() {
 
 }
 
+sig_atomic_t signaled2 = 0;
+
 void StdDataLoop::execPart2() {
     if (verbose)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -48,6 +51,9 @@ void StdDataLoop::execPart2() {
     unsigned iterations = 0;
     //uint32_t startAddr = 0;
 
+    signaled2 = 0;
+    signal(SIGINT, [](int signum){signaled2 = 1;});
+    signal(SIGUSR1, [](int signum){signaled2 = 1;});
 
     std::vector<RawData*> tmp_storage;
     RawData *newData = NULL;
@@ -65,6 +71,11 @@ void StdDataLoop::execPart2() {
             }
         } while (newData != NULL);
         //delete newData;
+        if (signaled2 == 1 || killswitch) {
+            std::cout << "Caught interrupt, stopping data taking!" << std::endl;
+            std::cout << "Abort will leave buffers full of data!" << std::endl;
+            g_tx->toggleTrigAbort();
+        }
     }
     // Gather rest of data after timeout (~0.1ms)
     std::this_thread::sleep_for(std::chrono::microseconds(500));
@@ -86,6 +97,36 @@ void StdDataLoop::execPart2() {
         std::cout << " --> Received " << count << " words! " << iterations << std::endl;
     m_done = true;
     counter++;
+}
+
+void StdDataLoop::execPart2Standalone() {
+	
+    RawData *newData = NULL;
+    RawDataContainer *rdc = new RawDataContainer();
+    uint32_t done = g_tx->isTrigDone();
+    if (done == 0) {
+        do {
+            newData =  g_rx->readData();
+            if (newData != NULL) {
+                rdc->add(newData);
+            }
+        } while (newData != NULL);
+        //delete newData;
+    }
+    else
+	m_done = true;
+    // Gather rest of data after timeout (~0.1ms)
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
+    delete newData;
+    
+    rdc->stat = *g_stat;
+    storage->pushData(rdc);
+        
+    counter++;
+}
+
+void StdDataLoop::sendAbort() {
+	g_tx->toggleTrigAbort();
 }
 
 void StdDataLoop::connect(ClipBoard<RawDataContainer> *clipboard) {
