@@ -20,8 +20,7 @@ class StdDataLoop: public LoopActionBase {
         void execPart1();
         void execPart2();
 	void execPart2Standalone();
-	void sendAbort();
-	void pushData();
+	void endScan();
 	void kill() {
 		killswitch = true;
 	}
@@ -31,6 +30,8 @@ class StdDataLoop: public LoopActionBase {
         unsigned counter;
 	bool killswitch;
 	RawDataContainer* rdc_global;
+	unsigned count_global;
+	unsigned iterations_global;
 };
 
 #endif

@@ -94,8 +94,8 @@ void StdDataLoop::execPart2() {
     rdc->stat = *g_stat;
     storage->pushData(rdc);
         
-    if (verbose)
-        std::cout << " --> Received " << count << " words! " << iterations << std::endl;
+    //if (verbose)
+    std::cout << " --> Received " << count << " words! " << iterations << std::endl;
     m_done = true;
     counter++;
 }
@@ -104,30 +104,39 @@ void StdDataLoop::execPart2Standalone() {
 	
     RawData *newData = NULL;
     
-    uint32_t done = 0 /*g_tx->isTrigDone()*/;
+    uint32_t done = 0;
     if (done == 0) {
+        done = g_tx->isTrigDone();
         do {
-            newData =  g_rx->readData();
-            if (newData != NULL) {
-                rdc_global->add(newData);
-            }
+	    newData =  g_rx->readData();
+	    iterations_global++;
+	    if (newData != NULL) {
+	        rdc_global->add(newData);
+	        count_global += newData->words;
+	    }
         } while (newData != NULL);
         //delete newData;
     }
-    else
-	m_done = true;
     // Gather rest of data after timeout (~0.1ms)
     //std::this_thread::sleep_for(std::chrono::microseconds(500));
     delete newData;
             
 }
 
-void StdDataLoop::sendAbort() {
-	g_tx->toggleTrigAbort();
-	std::this_thread::sleep_for(std::chrono::microseconds(500));
-}
+void StdDataLoop::endScan() {
+    uint32_t done = 0;
+    g_tx->toggleTrigAbort();
+    while(done == 0){
+        std::cout << "Trying to end scan, isTrigDone not yet true" << std::endl;
+        done = g_tx->isTrigDone();
+        this->execPart2Standalone();
+        g_tx->toggleTrigAbort();
+    }
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
+    this->execPart2Standalone();
 
-void StdDataLoop::pushData() {
+    //if (verbose)
+    std::cout << " --> Received " << count_global << " words! " << iterations_global << std::endl;
     rdc_global->stat = *g_stat;
     storage->pushData(rdc_global);
     counter++;
